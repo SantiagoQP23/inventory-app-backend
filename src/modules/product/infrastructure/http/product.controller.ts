@@ -1,11 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { GetAllProductsUseCase } from '../../application/use-cases/get-all-products.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/create-product.user-case';
 import { CreateProductDto } from '../../interface/dto/create-product.dto';
 import { Product } from '../../domain/entities/product.entity';
 import { AddStockUseCase } from '../../application/use-cases/add-stock.use-case';
+import { AccessGuard } from 'src/infrastructure/guards/access.guard';
+import { Access } from 'src/infrastructure/decorators/access.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('products')
+@UseGuards(AuthGuard('jwt'), AccessGuard)
 export class ProductController {
   constructor(
     private readonly getAllProductsUseCase: GetAllProductsUseCase, // Replace 'any' with the actual type

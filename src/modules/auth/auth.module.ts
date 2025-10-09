@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoginUseCase } from './application/use-case/login.use-case';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './infrastructure/jwt/jwt.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -28,7 +29,13 @@ import { PassportModule } from '@nestjs/passport';
       },
     }),
   ],
-  providers: [SignUpUseCase, BcryptService, JwtService, LoginUseCase],
-  exports: [BcryptService, JwtService],
+  providers: [
+    SignUpUseCase,
+    BcryptService,
+    JwtService,
+    LoginUseCase,
+    JwtStrategy,
+  ],
+  exports: [BcryptService, JwtService, JwtStrategy],
 })
 export class AuthModule {}

@@ -3,6 +3,7 @@ import { UserRepository } from 'src/modules/users/domain/repositories/user.repos
 import { LoginDto } from '../../interface/dto/login.dto';
 import { BcryptService } from '../../infrastructure/encryption/bcrypt.service';
 import { JwtService } from '../../infrastructure/jwt/jwt.service';
+import { JwtPayload } from '../../interface/jwt-payload.interface';
 
 @Injectable()
 export class LoginUseCase {
@@ -28,7 +29,14 @@ export class LoginUseCase {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { userId: user.id, email: user.email };
+    const payload: JwtPayload = {
+      userId: user.id,
+      email: user.email,
+      roles: user.userStores.map((us) => ({
+        role: us.role,
+        storeId: us.storeId,
+      })),
+    };
 
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken };
